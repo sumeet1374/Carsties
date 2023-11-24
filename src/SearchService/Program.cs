@@ -1,20 +1,27 @@
-using MongoDB.Driver;
-using MongoDB.Entities;
+using System.Net;
+using Polly;
+using Polly.Extensions.Http;
 using SearchService;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddHttpClient<AuctionServiceHttpClient>();
+builder.Services.AddHttpClient<AuctionServiceHttpClient>().AddPolicyHandler(GetPolocy());
 var app = builder.Build();
-try
+
+app.Lifetime.ApplicationStarted.Register(async () =>
 {
-    await DbInitializer.InitDb(app);
-}
-catch(Exception ex)
-{
-    Console.WriteLine($"Error in creating seed data {ex.Message}");
-}
+
+    try
+    {
+        await DbInitializer.InitDb(app);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error in creating seed data {ex.Message}");
+    }
+});
+
 app.MapControllers();
 
 // Configure the HTTP request pipeline.
@@ -29,4 +36,7 @@ app.MapControllers();
 
 app.Run();
 
-
+static IAsyncPolicy<HttpResponseMessage> GetPolocy()
+=> HttpPolicyExtensions.HandleTransientHttpError()
+   .OrResult(message => message.StatusCode == HttpStatusCode.NotFound)
+   .WaitAndRetryForeverAsync(_=> TimeSpan.FromSeconds(3));
