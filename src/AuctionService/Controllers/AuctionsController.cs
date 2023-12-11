@@ -89,11 +89,27 @@ public class AuctionsController : ControllerBase
         auction.Item.Mileage = dto.Mileage ?? auction.Item.Mileage;
         auction.Item.Year = dto.Year ?? auction.Item.Year;
 
-        var result = await _context.SaveChangesAsync() > 0;
-        if (result)
-            return Ok();
+          await _publishEndpoint.Publish(_mapper.Map<AuctionUpdated>(auction));
 
-        return BadRequest("Problem saving changes.");
+        var result = await _context.SaveChangesAsync() > 0;
+
+
+        if (result)
+        {
+           
+            // var returnDto = _mapper.Map<AuctionDTO>(auction);
+            // Console.WriteLine("Return DTO created");
+            //  var message = _mapper.Map<AuctionUpdated>(returnDto);
+            //    Console.WriteLine("Return message created");
+          
+              return Ok();
+        }
+        else
+        {
+              return BadRequest("Problem saving changes.");
+        }
+
+      
 
     }
 
@@ -108,9 +124,16 @@ public class AuctionsController : ControllerBase
 
         var result = await _context.SaveChangesAsync() > 0;
         if (result)
+        {
+            await _publishEndpoint.Publish<AuctionDeleted>(new AuctionDeleted(){ Id = auction.Id.ToString()});
             return Ok();
+        }
+        else
+        {
+             return BadRequest("Problem deleting changes.");
+        }  
 
-        return BadRequest("Problem deleting changes.");
+       
 
     }
 }

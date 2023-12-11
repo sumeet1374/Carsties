@@ -5,17 +5,17 @@ using MongoDB.Entities;
 
 namespace SearchService;
 
-public class AuctionCreatedConsumer : IConsumer<AuctionCreated>
+public class AuctionCreatedConsumer : ConsumerBase<AuctionCreated>
 {
-    private readonly IMapper _mapper;
-
-    public AuctionCreatedConsumer(IMapper mapper)
+    public AuctionCreatedConsumer(IMapper mapper) : base(mapper)
     {
-        _mapper = mapper;
     }
-    public async Task Consume(ConsumeContext<AuctionCreated> context)
+
+    public override async Task Consume(ConsumeContext<AuctionCreated> context)
     {
         Console.WriteLine($"----> Consuming Auction Created : {context.Message.Id}");
+        if(context.Message.Model == "Foo")
+            throw new ArgumentException("Model Cannot be Foo");
         var item = _mapper.Map<Item>(context.Message);
         await item.SaveAsync();
     }
