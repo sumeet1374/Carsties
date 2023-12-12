@@ -33,7 +33,7 @@ public class AuctionsController : ControllerBase
 
         if(!string.IsNullOrEmpty(date))
         {
-            query.Where(x=>x.UpdatedAt.CompareTo(DateTime.Parse(date).ToUniversalTime()) > 0);
+             query = query.Where(x=>x.UpdatedAt.CompareTo(DateTime.Parse(date).ToUniversalTime()) > 0);
         }
 
         return await query.ProjectTo<AuctionDTO>(_mapper.ConfigurationProvider).ToListAsync();
@@ -84,8 +84,8 @@ public class AuctionsController : ControllerBase
         // To do to Check Seller Name matches the user name
 
         auction.Item.Make = dto.Make ?? auction.Item.Make;
-        auction.Item.Model = dto.Make ?? auction.Item.Model;
-        auction.Item.Color = dto.Make ?? auction.Item.Color;
+        auction.Item.Model = dto.Model ?? auction.Item.Model;
+        auction.Item.Color = dto.Color ?? auction.Item.Color;
         auction.Item.Mileage = dto.Mileage ?? auction.Item.Mileage;
         auction.Item.Year = dto.Year ?? auction.Item.Year;
 
