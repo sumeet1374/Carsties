@@ -2,6 +2,7 @@ using AuctionService.Data;
 using Microsoft.EntityFrameworkCore;
 using MassTransit;
 using AuctionService;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,8 +29,19 @@ builder.Services.AddMassTransit(x=> {
     x.AddConsumersFromNamespaceContaining<AuctionCreatedFaultConsumer>();
     x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("auction",false));
 });
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Authority = builder.Configuration["IdentityServiceUrl"];
+        options.RequireHttpsMetadata = false;
+        options.TokenValidationParameters.ValidateAudience = false;
+        options.TokenValidationParameters.NameClaimType = "username";
+    });
 var app = builder.Build();
 
+app.UseAuthentication();
+app.UseAuthorization();
 // Configure the HTTP request pipeline.
 
 // Seed Data
