@@ -1,5 +1,6 @@
 ﻿using System.Runtime.Intrinsics.Arm;
 using Duende.IdentityServer.Models;
+using IdentityModel;
 
 namespace IdentityService;
 
@@ -30,6 +31,19 @@ public static class Config
                 ClientSecrets = { new Secret("NotASecret".Sha256())},
                 AllowedGrantTypes = { GrantType.ResourceOwnerPassword } 
                 
+                
+            },
+            new Client()
+            {
+                ClientId ="nextApp",
+                ClientName="nextApp",
+                ClientSecrets = { new Secret("secret".ToSha256())},
+                AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
+                RequirePkce = false,
+                RedirectUris = { "http://localhost:3000/api/auth/callback/id-server"},
+                AllowOfflineAccess = true,
+                AllowedScopes = {"auctionApp","openid","profile"},
+                AccessTokenLifetime = (3600*24*30)
                 
             }
             // m2m client credentials flow client
