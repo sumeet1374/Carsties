@@ -24,11 +24,18 @@ internal static class HostingExtensions
         builder.Services
             .AddIdentityServer(options =>
             {
+                
                 options.Events.RaiseErrorEvents = true;
                 options.Events.RaiseInformationEvents = true;
                 options.Events.RaiseFailureEvents = true;
                 options.Events.RaiseSuccessEvents = true;
 
+                if (builder.Environment.IsEnvironment("Docker"))
+                {
+                    options.IssuerUri = "http://identity-svc";
+                }
+                //
+                // options.IssuerUri = "identity-svc";
                 // see https://docs.duendesoftware.com/identityserver/v6/fundamentals/resources/
                 // options.EmitStaticAudienceClaim = true;
             })
