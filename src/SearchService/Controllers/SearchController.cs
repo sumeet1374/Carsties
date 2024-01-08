@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 using MongoDB.Entities;
 
 namespace SearchService;
@@ -20,7 +21,7 @@ public class SearchController:ControllerBase
 
         query = searchParams.OrderBy switch
         {
-            "make"=> query.Sort(x=>x.Ascending(a=>a.Make)),
+            "make"=> query.Sort(x=>x.Ascending(a=>a.Make)).Sort(a=>a.Ascending(x=>x.Model)),
              "new"=> query.Sort(x=>x.Descending(a=>a.CreatedAt)),
               _=> query.Sort(x=>x.Ascending(a=>a.AuctionEnd))
         };
