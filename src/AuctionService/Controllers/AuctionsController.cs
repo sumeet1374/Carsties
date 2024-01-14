@@ -20,7 +20,9 @@ public class AuctionsController : ControllerBase
     private readonly IMapper _mapper;
     private readonly IPublishEndpoint _publishEndpoint;
 
-    public AuctionsController(AuctionDbContext context, IMapper mapper,IPublishEndpoint publishEndpoint)
+    public AuctionsController(AuctionDbContext context, 
+        IMapper mapper,
+        IPublishEndpoint publishEndpoint)
     {
         _context = context;
         _mapper = mapper;
@@ -64,7 +66,7 @@ public class AuctionsController : ControllerBase
 
          var returnDto = _mapper.Map<AuctionDTO>(entity);
          var newacution = _mapper.Map<AuctionCreated>(returnDto);
-         await _publishEndpoint.Publish<AuctionCreated>(newacution);
+         await _publishEndpoint.Publish(newacution);
         var result = await _context.SaveChangesAsync() > 0;
         if (!result)
             return BadRequest("Could not save changes to the DB");
@@ -125,15 +127,21 @@ public class AuctionsController : ControllerBase
         var auction = await _context.Auctions.Include(x => x.Item).FirstOrDefaultAsync(x => x.Id == id);
         if (auction == null)
             return NotFound();
+
+       
+        
         // To do to Check Seller Name matches the user name
         if (auction.Seller != User.Identity!.Name)
             return Forbid();
         _context.Auctions.Remove(auction);
-
+        var message = new AuctionDeleted() { Id = id.ToString() };
+        Console.Write($"Delete messaged passed {message.Id}");
+        await _publishEndpoint.Publish(message);
+        
         var result = await _context.SaveChangesAsync() > 0;
         if (result)
         {
-            await _publishEndpoint.Publish<AuctionDeleted>(new AuctionDeleted(){ Id = auction.Id.ToString()});
+            
             return Ok();
         }
         else
@@ -142,6 +150,6 @@ public class AuctionsController : ControllerBase
         }  
 
        
-
+        //InstrumentationKey=707b94ec-0484-43cd-8171-21aa61633505;IngestionEndpoint=https://centralindia-0.in.applicationinsights.azure.com/;LiveEndpoint=https://centralindia.livediagnostics.monitor.azure.com/
     }
 }

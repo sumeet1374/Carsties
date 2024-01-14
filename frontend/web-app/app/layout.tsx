@@ -1,27 +1,29 @@
-import type { Metadata } from 'next'
+import type {Metadata} from 'next'
 import './globals.css'
 import NavBar from './nav/NavBar'
+import ToasterProvider from "@/app/providers/ToasterProvider";
 
 
 export const metadata: Metadata = {
-  title: 'Carsties',
-  description: 'Carsties',
+    title: 'Carsties',
+    description: 'Carsties',
 }
 
 export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
+                                       children,
+                                   }: {
+    children: React.ReactNode
 }) {
-  return (
-    <html lang="en">
-     <body>
-        <NavBar />
+    return (
+        <html lang="en">
+        <body>
+        <ToasterProvider/>
+        <NavBar/>
         <main className='container mx-auto px-5  pt-10'>
-        {children}
+            {children}
         </main>
-     
-      </body>
-    </html>
-  )
+
+        </body>
+        </html>
+    )
 }

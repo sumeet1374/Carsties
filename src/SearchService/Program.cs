@@ -1,6 +1,7 @@
 using System.Net;
 using Contracts;
 using MassTransit;
+using Microsoft.Extensions.Logging.ApplicationInsights;
 using Polly;
 using Polly.Extensions.Http;
 using SearchService;
@@ -36,6 +37,10 @@ builder.Services.AddMassTransit(x=> {
         cfg.ConfigureEndpoints(context);
     });
 });
+
+
+
+
 var app = builder.Build();
 
 app.Lifetime.ApplicationStarted.Register(async () =>

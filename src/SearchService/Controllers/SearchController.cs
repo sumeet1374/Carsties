@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using MongoDB.Entities;
+using ILogger = DnsClient.Internal.ILogger;
 
 namespace SearchService;
 
@@ -8,6 +9,7 @@ namespace SearchService;
 [Route("api/search")]
 public class SearchController:ControllerBase
 {
+   
     [HttpGet]
     public async Task<ActionResult<List<Item>>> SearchItem([FromQuery]SearchParams searchParams)
     {

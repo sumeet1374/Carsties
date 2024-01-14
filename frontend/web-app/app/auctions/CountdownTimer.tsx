@@ -10,12 +10,14 @@ type Props = {
 // Renderer callback with condition
 const renderer = ({ days,hours, minutes, seconds, completed }:{days:Number,hours:Number,minutes:Number,seconds:Number,completed:boolean}) => {
     
+    // @ts-ignore
+    // @ts-ignore
     return (
 
         <div className={
             `border-2  border-white text-white py-1 px-2 rounded-lg flex justify-center
             ${completed? 'bg-red-600': (days === 0 && hours < 10)?
-            'bg-amber600':'bg-green-600'
+            'bg-amber-600':'bg-green-600'
             }
             `
         }>
