@@ -2,6 +2,7 @@ using AuctionService.Data;
 using Microsoft.EntityFrameworkCore;
 using MassTransit;
 using AuctionService;
+using AuctionService.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Logging.ApplicationInsights;
 
@@ -46,7 +47,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 
-
+builder.Services.AddGrpc();
 
 var app = builder.Build();
 
@@ -64,6 +65,7 @@ catch(Exception ex)
     Console.WriteLine($"Exception is {ex.Message}");
 }
 app.MapControllers();
+app.MapGrpcService<GrpcAuctionService>();
 
 
 app.Run();
