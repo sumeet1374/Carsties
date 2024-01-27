@@ -1,5 +1,5 @@
 import React from 'react'
-import {deleteAuction, getDetailedViewData} from "@/app/actions/auctionActions";
+import {deleteAuction, getBidsForAuction, getDetailedViewData} from "@/app/actions/auctionActions";
 import Heading from "@/app/components/Heading";
 import CountdownTimer from "@/app/auctions/CountdownTimer";
 import CarImage from "@/app/auctions/CarImage";
@@ -8,11 +8,15 @@ import {getCurrentUser} from "@/app/actions/authActions";
 import EditButton from "@/app/auctions/details/[id]/EditButton";
 import {Button} from "flowbite-react";
 import DeleteButton from "@/app/auctions/details/[id]/DeleteButton";
+import {param} from "ts-interface-checker";
+import BidItem from "@/app/auctions/details/[id]/BidItem";
+import BidList from "@/app/auctions/details/[id]/BidList";
 
 export default async function Details({ params}:{ params:{ id:string}}) {
   
   const data = await getDetailedViewData(params.id);
   const user = await getCurrentUser();
+
   
   return (
       <div>
@@ -43,9 +47,7 @@ export default async function Details({ params}:{ params:{ id:string}}) {
                   <CarImage imageUrl={data.imageUrl}></CarImage>
 
               </div>
-              <div className='border-2 rounded-lg p-2 bg-gray-100'>
-                  <Heading title="Bids"/>
-              </div>
+              <BidList user={user} auction={data} />
 
           </div>
           <div className='mt-3 grid grid-cols-1 rounded-lg'>

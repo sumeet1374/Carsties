@@ -11,4 +11,5 @@ public class BidPlacedConsumer:NotificationConsumerBase<BidPlaced>
     }
 
     protected override string ConsumerDescription => "Bid Placed";
+    protected override string ConsumerName => "BidPlaced";
 }

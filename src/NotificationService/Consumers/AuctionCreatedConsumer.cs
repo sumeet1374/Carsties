@@ -12,4 +12,5 @@ public class AuctionCreatedConsumer:NotificationConsumerBase <AuctionCreated>
     }
 
     protected override string ConsumerDescription => "Auction Created";
+    protected override string ConsumerName => "AuctionCreated";
 }

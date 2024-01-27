@@ -65,7 +65,7 @@ public class BidsController:ControllerBase
             var highBid = await DB.Find<Bid>()
                 .Match(a => a.AuctionId == auctionId)
                 .Sort(b => b.Descending(c => c.Amount))
-                .ExecuteSingleAsync();
+                .ExecuteFirstAsync();
 
             if (highBid != null && amount > highBid.Amount || highBid == null)
             {

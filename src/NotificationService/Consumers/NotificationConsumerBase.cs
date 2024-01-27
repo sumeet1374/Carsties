@@ -8,6 +8,7 @@ public abstract class NotificationConsumerBase<T> :IConsumer<T> where T:class
     private readonly IHubContext<NotificationHub> _hub;
     
     protected abstract string ConsumerDescription { get; }
+    protected abstract string ConsumerName { get; }
 
     public NotificationConsumerBase(IHubContext<NotificationHub> hub)
     {
@@ -16,6 +17,7 @@ public abstract class NotificationConsumerBase<T> :IConsumer<T> where T:class
     public async Task Consume(ConsumeContext<T> context)
     {
         Console.WriteLine($"----> {ConsumerDescription} Message Received");
-        await _hub.Clients.All.SendAsync( nameof(T), context.Message);
+        Console.WriteLine($"----- Message Name {ConsumerName}");
+        await _hub.Clients.All.SendAsync( ConsumerName, context.Message);
     }
 }
