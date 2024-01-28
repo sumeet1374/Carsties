@@ -28,7 +28,6 @@ export default function AuctionForm({auction}: Props) {
 
 
     async function onSubmit(data: FieldValues) {
-        console.log(data);
         try {
             let id = "";
             let result;
@@ -49,7 +48,6 @@ export default function AuctionForm({auction}: Props) {
             router.push(`/auctions/details/${id}`);
 
         } catch (error: any) {
-            console.log(error);
             toast.error(error.status + " " + error.message);
         }
 
@@ -61,7 +59,7 @@ export default function AuctionForm({auction}: Props) {
             reset({make, model, color, mileage, year});
         }
         setFocus('make')
-    }, [setFocus]);
+    }, [setFocus,reset,auction]);
 
     return (
         <form className='flex flex-col mt-3' onSubmit={handleSubmit(onSubmit)}>

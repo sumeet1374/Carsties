@@ -10,7 +10,7 @@ type Props = {
 }
 
 // Renderer callback with condition
-const renderer = ({ days,hours, minutes, seconds, completed }:{days:Number,hours:Number,minutes:Number,seconds:Number,completed:boolean}) => {
+const renderer = ({ days,hours, minutes, seconds, completed }:{days:number,hours:number,minutes:number,seconds:number,completed:boolean}) => {
     
 
     
