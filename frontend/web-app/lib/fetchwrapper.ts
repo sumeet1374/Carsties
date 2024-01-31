@@ -7,7 +7,6 @@ async function get(url:string) {
         method:"GET",
         headers:await getHeaders()
     }
-
     const response = await fetch(baseUrl+url,requestOptions);
     return await handleResponse(response);
 }

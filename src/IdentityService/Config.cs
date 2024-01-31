@@ -19,31 +19,35 @@ public static class Config
             new ApiScope("auctionApp","Auction App Full Access")
         };
 
-    public static IEnumerable<Client> Clients =>
-        new Client[]
+    public static IEnumerable<Client> Clients(IConfiguration config)
+    {
+
+        var appUrl = config["ClientApp"];
+        
+       return new Client[]
         {
             new Client()
             {
                 ClientId = "postman",
                 ClientName = "PostMan",
-                AllowedScopes = {"auctionApp","openid","profile"},
-                RedirectUris = { "https://www.getpostman.com/"},
-                ClientSecrets = { new Secret("NotASecret".Sha256())},
-                AllowedGrantTypes = { GrantType.ResourceOwnerPassword } 
-                
-                
+                AllowedScopes = { "auctionApp", "openid", "profile" },
+                RedirectUris = { "https://www.getpostman.com/" },
+                ClientSecrets = { new Secret("NotASecret".Sha256()) },
+                AllowedGrantTypes = { GrantType.ResourceOwnerPassword }
+
+
             },
             new Client()
             {
-                ClientId ="nextApp",
-                ClientName="nextApp",
-                ClientSecrets = { new Secret("secret".ToSha256())},
+                ClientId = "nextApp",
+                ClientName = "nextApp",
+                ClientSecrets = { new Secret("secret".ToSha256()) },
                 AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
                 RequirePkce = false,
-                RedirectUris = { "http://localhost:3000/api/auth/callback/id-server"},
+                RedirectUris = { $"{appUrl}/api/auth/callback/id-server" },
                 AllowOfflineAccess = true,
-                AllowedScopes = {"auctionApp","openid","profile"},
-                AccessTokenLifetime = (3600*24*30),
+                AllowedScopes = { "auctionApp", "openid", "profile" },
+                AccessTokenLifetime = (3600 * 24 * 30),
                 AlwaysIncludeUserClaimsInIdToken = true
             }
             // m2m client credentials flow client
@@ -74,4 +78,5 @@ public static class Config
             //     AllowedScopes = { "openid", "profile", "scope2" }
             // },
         };
+    }
 }
